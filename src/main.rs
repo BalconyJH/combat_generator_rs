@@ -36,9 +36,10 @@ async fn main() {
         mode: "ExampleMode".to_string(),
         role: "ExampleRole".to_string(),
         version: "1.0".to_string(),
-        combat: vec![
-            Action { pre_delay: 100, post_delay: 200 },
-        ],
+        combat: vec![Action {
+            pre_delay: 100,
+            post_delay: 200,
+        }],
     };
 
     let write_path = "combat.json";
@@ -50,7 +51,7 @@ async fn main() {
     match read_json_file_async(read_path).await {
         Ok(combat_read) => {
             println!("Read combat data: {:?}", combat_read);
-        },
+        }
         Err(e) => {
             eprintln!("Error reading file: {}", e);
         }
@@ -67,24 +68,36 @@ mod tests {
             mode: "Test".to_string(),
             role: "Tester".to_string(),
             version: "1.0".to_string(),
-            combat: vec![
-                Action { pre_delay: 100, post_delay: 200 },
-            ],
+            combat: vec![Action {
+                pre_delay: 100,
+                post_delay: 200,
+            }],
         };
 
         let test_path = "test_combat.json";
 
         // 测试写入功能
         let write_result = write_json_file_async(&combat_test, test_path).await;
-        assert!(write_result.is_ok(), "Failed to write to file: {:?}", write_result.err());
+        assert!(
+            write_result.is_ok(),
+            "Failed to write to file: {:?}",
+            write_result.err()
+        );
 
         // 测试读取功能
         let read_result = read_json_file_async(test_path).await;
-        assert!(read_result.is_ok(), "Failed to read from file: {:?}", read_result.err());
+        assert!(
+            read_result.is_ok(),
+            "Failed to read from file: {:?}",
+            read_result.err()
+        );
 
         // 验证内容是否一致
         let combat_read = read_result.expect("Failed to unwrap read result");
-        assert_eq!(combat_read, combat_test, "Read data does not match written data");
+        assert_eq!(
+            combat_read, combat_test,
+            "Read data does not match written data"
+        );
 
         // 清理测试文件
         let remove_result = tokio::fs::remove_file(test_path).await;
